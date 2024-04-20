@@ -18,7 +18,7 @@ const Cabecera = () => {
   const [categoria, setCategoria] = useState({});
   useEffect(() => {
     axiosEcommerce
-      .get(`/api/v1/categorias/${id}`)
+      .get(`/categorias/${id}`)
       .then((response) => {
         setCategoria(response.data.categoria);
       })

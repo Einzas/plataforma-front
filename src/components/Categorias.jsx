@@ -17,7 +17,7 @@ const Categorias = () => {
 
   useEffect(() => {
     axiosEcommerce
-      .get("/api/v1/categorias/padres")
+      .get("/categorias/padres")
       .then((response) => {
         setCategorias(response.data.categorias);
       })

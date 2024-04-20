@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const axiosEcommerce = axios.create({
   //url base de la api
-  baseURL: "http://localhost:3000/",
+  baseURL: "https://platform-38225774a32f.herokuapp.com/api/v1",
 });
 
 export const getConfig = () => {

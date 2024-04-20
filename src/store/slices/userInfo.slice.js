@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { axiosEcommerce } from "../../utils/configAxios";
+import Swal from "sweetalert2";
 const initialState = {
   token: "",
-  user: null,
+  usuario: null,
 };
 
 const userInfoSlice = createSlice({
@@ -16,7 +17,7 @@ const userInfoSlice = createSlice({
     },
     logOut: (state) => {
       const newState = { ...state, ...initialState };
-      localStorage.setItem("userInfo", JSON.stringify(newState));
+      localStorage.removeItem("userInfo");
       return newState;
     },
   },
@@ -26,7 +27,7 @@ export const { setUserInfo, logOut } = userInfoSlice.actions;
 
 export const loginUser = (data) => (dispatch) => {
   axiosEcommerce
-    .post("/api/v1/usuarios/login", data)
+    .post("/usuarios/login", data)
     .then((response) => {
       dispatch(setUserInfo(response.data));
     })
@@ -37,12 +38,44 @@ export const loginUser = (data) => (dispatch) => {
 
 export const registerUser = (data) => (dispatch) => {
   axiosEcommerce
-    .post("users", data)
+    .post("/usuarios/signup", data)
     .then((response) => {
       dispatch(setUserInfo(response.data));
     })
     .catch((error) => {
-      console.log(error);
+      let errores = error.response.data.errors;
+      if (errores) {
+        let mensajes = "";
+        for (const key in errores) {
+          mensajes += errores[key].msg + "\n";
+        }
+
+        Swal.fire({
+          icon: "warning",
+          title: "¡Error!",
+          text: mensajes,
+          showConfirmButton: false,
+          timer: 2500,
+        }).then(() => {
+          localStorage.setItem("validacion", "false");
+        });
+      } else {
+        let errrors = error.response.data.error.errors;
+        let mensajes = "";
+        errrors.forEach((element) => {
+          mensajes += element.message + "\n";
+        });
+
+        Swal.fire({
+          icon: "error",
+          title: "¡Error!",
+          text: mensajes,
+          showConfirmButton: false,
+          timer: 2500,
+        }).then(() => {
+          localStorage.setItem("validacion", "false");
+        });
+      }
     });
 };
 

@@ -7,7 +7,7 @@ const Cursos = () => {
   const [cursos, setCursos] = useState([]);
   useEffect(() => {
     axiosEcommerce
-      .get(`/api/v1/categorias/hijo/${id}`)
+      .get(`/categorias/hijo/${id}`)
       .then((response) => {
         setCategoria(response.data.categorias);
       })

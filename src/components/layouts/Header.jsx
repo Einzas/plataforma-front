@@ -2,10 +2,14 @@ import { useState, useEffect, useRef } from "react";
 import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 import { logOut, loginUser } from "../../store/slices/userInfo.slice";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [loginModal, setLoginModal] = useState(false); // [1
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDropdown = () => setIsOpen(!isOpen);
   const searchRef = useRef(null);
   const modalRef = useRef(null);
   const handleSearch = () => {
@@ -53,6 +57,7 @@ const Header = () => {
             })
               .then(() => {
                 setLoginModal(false);
+                location.reload();
               })
               .catch((error) => {
                 console.log(error);
@@ -61,7 +66,17 @@ const Header = () => {
         },
       });
     } else {
-      alert("Por favor, rellena todos los campos");
+      Swal.fire({
+        icon: "error",
+        title: "¡Error!",
+        text: "¡Por favor, llena todos los campos!",
+        showConfirmButton: false,
+        showCancelButton: false,
+        showCloseButton: true,
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false,
+      });
     }
   };
 
@@ -125,7 +140,7 @@ const Header = () => {
 
   return (
     <>
-      <header className="h-[50px] bg-white shadow-2xl z-10">
+      <header className="h-[50px] bg-white shadow-2xl ">
         <div className="mx-3 flex items-center justify-between h-full">
           <div className="w-32">
             <img src="/imgs/logoutlvte.png" alt="" />
@@ -156,12 +171,33 @@ const Header = () => {
               </li>
               <li>
                 {userInfo.usuario && userInfo.token ? (
-                  <button
-                    onClick={handleLogOut}
-                    className="bg-red-500 hover:bg-red-600 px-2 py-2 rounded-lg text-white hover:text-gray-800"
-                  >
-                    Cerrar sesión
-                  </button>
+                  <div className="relative">
+                    {/* Botón para desplegar el menú */}
+                    <button
+                      onClick={toggleDropdown}
+                      className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white"
+                    >
+                      ≡
+                    </button>
+
+                    {/* Menú desplegable */}
+                    {isOpen && (
+                      <div className="absolute right-0 mt-2 py-2 w-48 bg-white rounded-md shadow-xl z-20">
+                        <Link
+                          to={"/sysadmin/"}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-300"
+                        >
+                          Panel de control
+                        </Link>
+                        <button
+                          onClick={handleLogOut}
+                          className="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-300"
+                        >
+                          Cerrar sesión
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 ) : (
                   <button
                     onClick={handleLogin}
@@ -177,7 +213,7 @@ const Header = () => {
       </header>
       {loginModal && (
         <div
-          className="bg-black/20 fixed w-full h-screen"
+          className="bg-black/20 fixed w-full h-screen z-50"
           onClick={handleLogin}
         >
           <div
@@ -224,13 +260,21 @@ const Header = () => {
                     className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
-                <div className="grid place-content-center gap-2 items-center">
+                <div className="grid place-content-center gap-2 items-center w-full">
                   <button
                     type="submit"
-                    className="bg-green-500 hover:bg-green-600 py-2 rounded-lg text-white hover:text-gray-800"
+                    className="bg-green-500 hover:bg-green-600 py-2 rounded-lg text-white w-f hover:text-gray-800"
                   >
                     Iniciar sesión
                   </button>
+                  <hr />
+                  <p className="text-center text-xs">¿No tienes cuenta?</p>
+                  <Link
+                    to={"/register"}
+                    className="bg-red-500 hover:bg-red-600 rounded-lg text-white hover:text-gray-800 py-2  text-center"
+                  >
+                    Regístrate
+                  </Link>
                   <a href="/" className="text-blue-500 hover:underline">
                     ¿Olvidaste tu contraseña?
                   </a>

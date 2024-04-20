@@ -1,0 +1,37 @@
+/* Spinner.css */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes spin-reverse {
+    from {
+        transform: rotate(360deg);
+    }
+
+    to {
+        transform: rotate(0deg);
+    }
+}
+
+.circle-bar {
+    top: -2px;
+    left: -2px;
+    animation-duration: 3s;
+    /* You can adjust the time */
+    animation-iteration-count: infinite;
+    animation-timing-function: cubic-bezier(1, 0, 0, 1)
+}
+
+.animate-spin {
+    animation-name: spin;
+}
+
+.animate-spin-reverse {
+    animation-name: spin-reverse;
+}
